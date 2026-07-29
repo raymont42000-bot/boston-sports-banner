@@ -1,0 +1,49 @@
+async function load(){
+
+const url="https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=111&hydrate=team";
+
+const r=await fetch(url);
+
+const data=await r.json();
+
+document.getElementById("status").innerHTML=
+"Connected to MLB";
+
+document.getElementById("schedule").innerHTML="";
+
+if(data.dates.length==0){
+
+document.getElementById("schedule").innerHTML=
+"<div>No upcoming games.</div>";
+
+return;
+
+}
+
+data.dates.forEach(d=>{
+
+d.games.forEach(g=>{
+
+const div=document.createElement("div");
+
+const away=g.teams.away.team.name;
+
+const home=g.teams.home.team.name;
+
+div.innerHTML=
+
+new Date(g.gameDate).toLocaleString()+"<br>"+
+
+away+" @ "+home;
+
+document.getElementById("schedule").appendChild(div);
+
+});
+
+});
+
+}
+
+load();
+
+setInterval(load,60000);
